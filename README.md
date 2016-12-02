@@ -1,5 +1,5 @@
 # promises
-A repo demoing how promises work, part of a blog post at http://funkyjavascript.com/promises
+A repo demoing how promises work, part of a blog post at http://funkyjavascript.com/promises-the-basics
 
 Have a look at front-end/js/main.js for the code I blogged about
 
