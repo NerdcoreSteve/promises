@@ -187,6 +187,15 @@ Promise.reject('failure').then(function () {
 });
 // prints returned from catch!
 
+//Also, you can throw a standard error and it'll get handled by .catch
+Promise.resolve('potatoes are my friends').then(function () {
+    throw 'It\'s my party and I\'ll cry if I want to!';
+}).then(function () {
+    return console.log('this never executes');
+}).catch(function (complaint) {
+    return console.log(complaint);
+});
+
 //Note: promises are side-effect-y as heck. Not very functional.
 //See Tasks for a more functional alternative to promises: https://github.com/folktale/data.task
 
