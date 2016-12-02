@@ -43,6 +43,14 @@ $get('/ajax').then(function (data) {
 });
 //prints { message: "This comes from an AJAX call!" }
 
+$get('/bananas').then(function () {
+    return console.log('this never executes because there is no \'/banana\'');
+}).catch(function (error) {
+    return console.log(error.responseText);
+});
+//prints Cannot GET /bananas
+//so sad
+
 //You might need the babel polyfil for promises,
 //https://babeljs.io/docs/usage/polyfill/
 //but I didn't in Chrome, Firefox, or Safari
