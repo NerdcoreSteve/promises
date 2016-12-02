@@ -47,6 +47,10 @@ $get('/ajax').then(function (data) {
 //https://babeljs.io/docs/usage/polyfill/
 //but I didn't in Chrome, Firefox, or Safari
 
+//Also, this uses the keyword new, I've not blogged about it,
+//but just know you need it to create a new promise.
+//Normally I avoid new like the plague
+
 //Now This
 $.ajax({
     url: '/heroes',
@@ -69,9 +73,22 @@ $.ajax({
     },
     error: console.error
 });
+/*
+prints:
+{
+    'id': 11,
+    'name': 'Robin',
+    'real_name': 'Carrie Kelly',
+    'first_appearance': {
+        'title': 'Batman: The Dark Knight Returns',
+        'year': 1986
+    }
+}
+*/
 
 //Turns into this
-//TODO show nice then chain with catch at the end
+//Note any errors (from front-end code or network response)
+//will bubble down to the catch method call
 $get('/heroes').then(function (results) {
     return $get('/sidekicks/' + R.pipe(R.prop('heroes'), R.find(function (hero) {
         return hero.name === 'Batman';
@@ -81,11 +98,97 @@ $get('/heroes').then(function (results) {
 }).then(function (firstappearance) {
     return console.log(firstappearance);
 }).catch(console.error);
+/*
+also prints:
+{
+    'id': 11,
+    'name': 'Robin',
+    'real_name': 'Carrie Kelly',
+    'first_appearance': {
+        'title': 'Batman: The Dark Knight Returns',
+        'year': 1986
+    }
+}
+*/
 
-//Show Promise .all, .reject, .resolve, .race
+//Promise.reject is sometimes useful for a function that needs to return a promise,
+//but will always fail on some branch of code
+var failure = Promise.reject('This always fails!');
 
-//Note that this is side-effect-y as heck and say that Tasks is an alternative to managing
-//network calls
+failure.then(function () {
+    return console.log('this function is never called');
+}).catch(function (error) {
+    return console.log(error);
+});
+
+//We've got Promise.resolve for a similar reason
+var success = Promise.resolve('This always succeeds!');
+
+success.then(function (success) {
+    return console.log(success);
+}).catch(function () {
+    return console.log('this function is never called');
+});
+
+//TODO Show Promise .all
+//If we want to wait until a bunch of promises are fulfilled
+//Promise.all returns a promise that only resolves 
+Promise.all([$get('/firstappearance/9'), $get('/firstappearance/10'), $get('/firstappearance/11')]).then(R.pipe(R.map(function (sidekick) {
+    return {
+        name: sidekick.name,
+        real_name: sidekick.real_name,
+        title: sidekick.first_appearance.title,
+        year: sidekick.first_appearance.year
+    };
+}), console.log));
+/*
+prints:
+[
+    {
+        'name': 'Robin',
+        'real_name': 'Damian Wayne',
+        'title': 'Batman #655',
+        'year': 2006
+    },
+    {
+        'name': 'Robin',
+        'real_name': 'Stephanie Brown',
+        'title': 'Detective Comics #647',
+        'year': 1992
+    },
+    {
+        'name': 'Robin',
+        'real_name': 'Carrie Kelly',
+        'title': 'Batman: The Dark Knight Returns',
+        'year': 1986
+    }
+]
+*/
+
+//Promise.race returns a promise that resolves
+//as soon as one of any of the promises you
+//give it resolves
+Promise.race([new Promise(function (resolve, reject) {
+    return setTimeout(resolve, 100, "This promise wins");
+}), new Promise(function (resolve, reject) {
+    return setTimeout(resolve, 200, "This promise loses");
+})]).then(function (result) {
+    return console.log(result);
+});
+//prints This promise wins
+
+//Weirdly, you can .then a catch
+Promise.reject('failure').then(function () {
+    return console.log('this never prints');
+}).catch(function () {
+    return Promise.resolve('returned from catch!');
+}).then(function (fromCatch) {
+    return console.log(fromCatch);
+});
+// prints returned from catch!
+
+//Note: promises are side-effect-y as heck. Not very functional.
+//See Tasks for a more functional alternative to promises: https://github.com/folktale/data.task
 
 },{"jquery":2,"ramda":3}],2:[function(require,module,exports){
 /*!

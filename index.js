@@ -48,32 +48,32 @@ app.get('/sidekicks/:heroid', function (req, res) {
                     {
                         'id': 6,
                         'name': 'Robin',
-                        'real name': 'Dick Grayson'
+                        'real_name': 'Dick Grayson'
                     },
                     {
                         'id': 7,
                         'name': 'Robin',
-                        'real name': 'Jason Todd'
+                        'real_name': 'Jason Todd'
                     },
                     {
                         'id': 8,
                         'name': 'Robin',
-                        'real name': 'Tim Drake'
+                        'real_name': 'Tim Drake'
                     },
                     {
                         'id': 9,
                         'name': 'Robin',
-                        'real name': 'Damian Wayne'
+                        'real_name': 'Damian Wayne'
                     },
                     {
                         'id': 10,
                         'name': 'Robin',
-                        'real name': 'Stephanie Brown'
+                        'real_name': 'Stephanie Brown'
                     },
                     {
                         'id': 11,
                         'name': 'Robin',
-                        'real name': 'Carrie Kelly'
+                        'real_name': 'Carrie Kelly'
                     }
                 ]
             })
@@ -85,11 +85,31 @@ app.get('/sidekicks/:heroid', function (req, res) {
 app.get('/firstappearance/:heroid', function (req, res) {  
     console.log('firstappearance');
     switch(parseInt(req.params.heroid)) {
+        case 9:
+            return res.json({
+                'id': 9,
+                'name': 'Robin',
+                'real_name': 'Damian Wayne',
+                'first_appearance': {
+                    'title': 'Batman #655',
+                    'year': 2006
+                }
+            })
+        case 10:
+            return res.json({
+                'id': 10,
+                'name': 'Robin',
+                'real_name': 'Stephanie Brown',
+                'first_appearance': {
+                    'title': 'Detective Comics #647',
+                    'year': 1992
+                }
+            })
         case 11:
             return res.json({
                 'id': 11,
                 'name': 'Robin',
-                'real name': 'Carrie Kelly',
+                'real_name': 'Carrie Kelly',
                 'first_appearance': {
                     'title': 'Batman: The Dark Knight Returns',
                     'year': 1986
