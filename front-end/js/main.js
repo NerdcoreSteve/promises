@@ -122,6 +122,13 @@ $get('/ajax')
     .catch(complaint => console.log(complaint))
 //prints It's my party and I'll cry if I want to!
 
+//Weirdly, you can .then a catch
+$get('/bananas')
+    .then(() => console.log('this never prints'))
+    .catch(() => new Promise((resolve, reject) => resolve('returned from catch!')))
+    .then(fromCatch => console.log(fromCatch))
+// prints returned from catch!
+
 //Promise.reject is sometimes useful for a function that needs to return a promise,
 //but will always fail on some branch of code
 const failure = Promise.reject('This always fails!')
@@ -188,14 +195,6 @@ Promise.race([
 ])
     .then(result => console.log(result))
 //prints This promise wins
-
-//Weirdly, you can .then a catch
-Promise
-    .reject('failure')
-    .then(() => console.log('this never prints'))
-    .catch(() => Promise.resolve('returned from catch!'))
-    .then(fromCatch => console.log(fromCatch))
-// prints returned from catch!
 
 //Note: promises are side-effect-y as heck. Not very functional.
 //See Tasks for a more functional alternative to promises: https://github.com/folktale/data.task
